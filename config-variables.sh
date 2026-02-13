@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # server or desktop
-install_mode="server"
+install_mode="desktop"
 
 ################################################################################
 # Default variables
@@ -15,36 +15,29 @@ B='\e[96m' # Blue
 Y='\e[93m' # Yellow
 
 # LVM Configuration
-create_home_fs="true"
+# create_home_fs="true"
 
-lv_swap_size="16G"
-lv_root_size="128G"
-lv_home_size="100%FREE"
+#lv_swap_size="16G"
+#lv_root_size="128G"
+#lv_home_size="100%FREE"
+
+swap_size="12G"
 
 # Configuration
-keymap="fr"
-hostname="laptop"
-timezone="Europe/Paris"
+keymap="la-latin1"
+hostname="archlinux"
+timezone="America/Bogota"
 locale="en_US"
-username="david"
+username="archuser"
 
 # Default packages
 declare -a default_packages=(
-    "ansible"
-    "bash-completion"
-    "dmidecode"
-    "ethtool"
+    "fish"
     "git"
-    "htop"
-    "inetutils"
-    "jq"
-    "mlocate"
-    "nftables"
-    "openbsd-netcat"
+    "btop"
     "openssh"
-    "tmux"
     "tree"
-    "vim"
+    "nvim"
     "wget"
 )
 
@@ -52,34 +45,24 @@ declare -a default_packages=(
 # Desktop variables
 ################################################################################
 
-# Gnome favorite apps
-# Can be found in /usr/share/applications/
-favorite_apps="['org.gnome.Terminal.desktop', 'nautilus.desktop', 'brave-browser.desktop', 'vivaldi-stable.desktop', 'firefox.desktop', 'visual-studio-code.desktop', 'notion-app.desktop', 'spotify.desktop', 'slack.desktop', 'discord.desktop', 'scummvm.desktop']"
-
 # Desktop specific packages
 declare -a desktop_packages=(
     "alsa-utils"
     "android-tools"
     "argocd"
     "aws-cli-v2"
+    "ark"
     "bind"
     "bluez"
     "bluez-utils"
     "brasero"
     "btrfs-progs"
-    "chromium"
     "cups"
     "cups-pdf"
-    "discord"
     "docker"
-    "dosbox"
-    "eksctl"
-    "elfutils"
-    "evince"
-    "exfat-utils"
-    "filezilla"
+    "exfatprogs"
     "firefox"
-    "fprintd"
+    "fish"
     "gdm"
     "gimp"
     "github-cli"
@@ -100,47 +83,24 @@ declare -a desktop_packages=(
     "mimir"
     "minio"
     "minio-client"
+    "mpv"
     "networkmanager"
     "nfs-utils"
     "obs-studio"
     "pacman-contrib"
     "packer"
     "prometheus"
-    "python-cookiecutter"
-    "python-pre-commit"
-    "python-pylint"
-    "qt5-wayland"
-    "rust"
-    "rust-analyzer"
-    "rust-wasm"
-    "rxvt-unicode"
-    "scummvm"
-    "shellcheck"
-    "terraform"
+    "python"
+    "python-numpy"
+    "python-matplotlib"
+    "python-ipykernel"
+    "rustup"
     "unrar"
     "unzip"
-    "usbutils"
-    "vagrant"
-    "valgrind"
-    "vault"
     "virtualbox"
-    "virtualbox-guest-utils"
-    "virtualbox-host-modules-arch"
-    "vivaldi"
-    "vivaldi-ffmpeg-codecs"
-    "vlc"
-    "wasmtime"
-    "webp-pixbuf-loader"
-    "wireguard-tools"
-    "wireless_tools"
-    "xdg-desktop-portal"
-    "xdg-desktop-portal-gnome"
-    "xorg"
-    "xorg-server"
-    "yamllint"
-    "zig"
+    "virtualbox-guest-iso"
+    "virtualbox-host-dkms"
     "zip"
-    "zsh"
 )
 
 # AUR packages
