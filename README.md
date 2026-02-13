@@ -10,22 +10,27 @@ I made this installer for my personal use, feel free to fork and build your own.
 
 This installer will:
 
-- Format your disk and create 2 partitions:
-  - A partition for the `EFI` (mounted on `/boot`)
-  - A `LUKS` encrypted partition for the system
-- Configure LVM on LUKS with 3 Logical Volumes (LVs):
-  - `root` (`/`)
-  - `home` (`/home`)
-  - `swap`
+- Use your existing disk layout and create 2 partitions, depending on ESP size:
+  - An `ext4` partition for `/boot` if the ESP is smaller than 1024 MiB (with the ESP mounted as `/efi`), otherwise the ESP will be mounted as `/boot`
+  - A `btrfs` partition for the system
+- Configure BTRFS Subvolumes as follows:
+  - `@` (`/`)
+  - `@swap` (`/swap`)
+  - `@tmp` (`/tmp`)
+  - `@var` (`/var`)
+  - `@log` (`/var/log`)
+  - `@pkg` (`/var/pkg`)
+  - `@libvirt` (`/var/lib/libvirt`) (optional)
+  - `@docker` (`/var/lib/docker`) (optional)
 - Configure the system
 - Create a user/password
+- Setup `snapper` and `snap-pac` for BTRFS Snapshots
 - Change the root password
-- Install packages, `yay` and some `AUR` packages
-- Install the `systemd-boot` bootloader (no support for bios)
-- Set custom `Gnome` favorites apps
-- Install my [dotfiles](https://github.com/dotdc/dotfiles)
+- Install packages, `paru` and some `AUR` packages
+- Install the `refind` bootloader (no support for BIOS)
+- Install KDE Plasma
 
-⚠️ This installer will format your disk! I will not be responsible for any data loss or damage to your computer.
+⚠️ This installer won't format your disk, but you should have backups regardless! I will not be responsible for any data loss or damage to your computer.
 
 ## Configuration
 
@@ -36,9 +41,9 @@ This installer will:
 Once you have booted on Archlinux ISO :
 
 ```console
-loadkeys fr
-pacman -Sy git
-git clone https://github.com/dotdc/archlinux-installer
+loadkeys [your keymap]
+pacman -Sy archlinux-keyring git
+git clone https://github.com/josephhdiazg/archlinux-installer.git
 cd archlinux-installer
 ./archlinux-installer.sh
 ```
