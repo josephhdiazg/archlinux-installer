@@ -38,38 +38,51 @@ echo -e "${B}
       @H@*\`                    \`*%#@
      *\`                            \`* ${W}"
 
-loadkeys fr
+loadkeys $keymap
 timedatectl set-ntp true
 
-# Disk partition
-echo -e "[${B}INFO${W}] Select destination disk for Arch Linux"
+# Select ESP partition
+echo -e "[${B}INFO${W}] Select ESP partition"
 echo "Disk(s) available:"
-parted -l | awk '/Disk \//{ gsub(":","") ; print "- \033[93m"$2"\033[0m",$3}' | column -t
-read -r -p "Please enter destination disk: " system_disk
+echo "Available disks:"
+lsblk -d -o NAME,MODEL,SIZE --noheadings | \
+awk '{printf "Disk /dev/%s: %s %s\n", $1, $2, $3}'
+echo
+echo "Available partitions:"
+echo "Device Size Type"
+lsblk -ln -o NAME,SIZE,PARTTYPENAME /dev/nvme0n1 | \
+awk 'NR>1 {printf "/dev/%s %s %s\n", $1, $2, $3}'
+read -r -p "Please enter ESP partition device: " efi_partition
 
-echo -e "Disk ${Y}${system_disk}${W} will be ${R}ERASED${W} !"
-read -r -p "Are you sure you want to proceed? (y/n)" system_disk_format
-
-if [[ "${system_disk_format}" != "y" ]] ; then
-    echo "Installation aborted!"
-    exit 0
+# Check for a valid partition
+if [[ "${esp_part}" =~ "/dev/sd" ]] ; then
+elif [[ "${esp_part}" =~ "/dev/nvme" ]] ; then
+  
 fi
+
+#echo -e "Disk ${Y}${system_disk}${W} will be ${R}ERASED${W} !"
+#read -r -p "Are you sure you want to proceed? (y/n)" system_disk_format
+
+#if [[ "${system_disk_format}" != "y" ]] ; then
+#    echo "Installation aborted!"
+#    exit 0
+#fi
 
 # CREATE PARTED GUID + PARTITIONS
-echo -e "[${B}INFO${W}] Format ${Y}${system_disk}${W} and create partitions"
-parted "${system_disk}" mklabel gpt
-parted "${system_disk}" mkpart "EFI" fat32 1MiB 301MiB
-parted "${system_disk}" set 1 esp on
-parted "${system_disk}" mkpart "LUKS-SYSTEM" ext4 301MiB 100%
+#echo -e "[${B}INFO${W}] Format ${Y}${system_disk}${W} and create partitions"
+#parted "${system_disk}" mklabel gpt
+#parted "${system_disk}" mkpart "EFI" fat32 1MiB 301MiB
+#parted "${system_disk}" set 1 esp on
+#parted "${system_disk}" mkpart "LUKS-SYSTEM" ext4 301MiB 100%
 
 # Guess partition names
-if [[ "${system_disk}" =~ "/dev/sd" ]] ; then
-  efi_partition="${system_disk}1"
-  luks_partition="${system_disk}2"
-else
-  efi_partition="${system_disk}p1"
-  luks_partition="${system_disk}p2"
-fi
+#if [[ "${system_disk}" =~ "/dev/sd" ]] ; then
+#  efi_partition="${system_disk}1"
+#  luks_partition="${system_disk}2"
+#else
+#  efi_partition="${system_disk}p1"
+#  luks_partition="${system_disk}p2"
+#fi
 
 # LUKS configuration
 echo -e "[${B}INFO${W}] Create luks partition on ${Y}${luks_partition}${W}"
